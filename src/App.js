@@ -3,40 +3,34 @@ import React, { useState } from "react";
 import UsersList from "./components/Users/UsersList";
 function App() {
   const [usersList, setUsersList] = useState([]);
-  // Function to add a new user to the users list.
-  // Parameters:
-  // uName - The name of the user to be added.
-  // uAge - The age of the user to be added.
+  // Function to add a new user to the users list. Parameters: uName - The name of the user to be added.  uAge - The age of the user to be added.
   const addUserHandler = (uName, uAge) => {
     setUsersList((prevUsersList) => {
       return [
         ...prevUsersList,
+        // The spread operator is used to include all previous users in the new list
+        // A new user object is created with the provided name and age, along with a unique ID
         { name: uName, age: uAge, id: Math.random().toString() },
       ];
     });
   };
-  // Function to remove a user from the users list by user ID.
-  // Parameters:
-  // userId - The ID of the user to be removed.
-  // It filters the users list to exclude the user with the specified ID.
+  // Function to remove a user from the users list by user ID. Parameters: userId - The ID of the user to be removed. It filters the users list to exclude the user with the specified ID.
 
   const removeUserHandler = (userId) => {
     setUsersList((prevUsersList) => {
-      return prevUsersList.filter((user) => user.id !== userId);
+      return prevUsersList.filter((user) => user.id !== userId); // The filter method creates a new array that excludes the user with the specified ID. This effectively removes the user from the users list. The user object is identified by its unique ID, ensuring that only the correct user is removed
     });
   };
-  // Function to update a user's information in the users list.
-  // Parameters:
-  // userId - The ID of the user to be updated.
-  // updatedName - The new name for the user.
-  // updatedAge - The new age for the user.
+  // Function to update a user's information in the users list. Parameters: userId - The ID of the user to be updated. updatedName - The new name for the user. updatedAge - The new age for the user.
   const updateUserHandler = (userId, updatedName, updatedAge) => {
+    // The updateUserHandler function is called when a user is updated, mapping through the usersList state to find and update the specified user // It takes the userId, updatedName, and updatedAge as parameters. // It uses the setUsersList function to update the usersList state.
     setUsersList((prevUsersList) => {
       return prevUsersList.map((user) =>
-        user.id === userId
-          ? { ...user, name: updatedName, age: updatedAge }
+        user.id === userId // The map method creates a new array by iterating over each user in the previous users list
+          ? { ...user, name: updatedName, age: updatedAge } // If the user ID matches, a new user object is created with the updated name and age
           : user
       );
+      // If the user ID does not match, the original user object is returned unchanged
     });
   };
   // The App component serves as the main application component
@@ -51,7 +45,6 @@ function App() {
       <AddUser onAddUser={addUserHandler} />
       {/* The AddUser component is responsible for adding new users to the list */}
       {/* It receives the addUserHandler function as a prop to handle user addition */}
-      {/* The h1 element displays the title of the users list */}
       {/* The UsersList component is responsible for displaying the list of users */}
       {/* It receives the usersList state, removeUserHandler, and updateUserHandler functions as props */}
       <hr />
