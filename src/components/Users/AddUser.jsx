@@ -1,112 +1,117 @@
+// Import the React library to use JSX and React features
 import React from "react";
+// Import the Card component for UI layout
 import Card from "../UI/Card";
+// Import CSS module for styling this component
 import classes from "./AddUser.module.css";
+// Import the Button component for the submit button
 import Button from "../UI/Button";
+// Import useState hook for managing component state
 import { useState } from "react";
+// Import ErrorModal component to display error messages
 import ErrorModal from "../UI/ErrorModal";
 
-// AddUser component for adding new users
-// Accepts props for adding a user and handles input validation
-
+// Define the AddUser functional component, receiving props from parent
 const AddUser = (props) => {
+  // State for storing the entered username input
   const [enteredUsername, setEnteredUsername] = useState("");
+  // State for storing the entered age input
   const [enteredAge, setEnteredAge] = useState("");
+  // State for storing error information (if any)
   const [error, setError] = useState();
 
-  // State variables to manage user input and error handling
-  // enteredUsername: stores the username input
-  // enteredAge: stores the age input
-  // error: stores any error messages to be displayed
-  // addUserHandler: function to handle form submission and validate input
-  // usernameChangeHandler: function to update the username state
-  // ageChangeHandler: function to update the age state
-  // errorHandler: function to clear the error state when the user acknowledges the error
+  // Handler for form submission
   const addUserHandler = (event) => {
+    // Prevent the default form submission behavior (page reload)
     event.preventDefault();
+    // Validate that both username and age fields are not empty
     if (enteredUsername.trim().length === 0 || enteredAge.trim().length === 0) {
+      // Set error state if validation fails
       setError({
         title: "invalid input",
         message: "Please enter a valid name and age (non empty values)",
       });
+      // Stop further execution
       return;
     }
+    // Validate that age is a positive number
     if (+enteredAge < 1) {
+      // Set error state if age is invalid
       setError({
         title: "Invalid Age",
         message: "Please enter a valid Age (> 0)",
       });
+      // Stop further execution
       return;
     }
-    // ✅ Valid input, proceed to add user
-    // The enteredUsername and enteredAge are valid, so we can proceed to add the user
-
-    // ✅ Send data to App
+    // If input is valid, call the onAddUser function passed via props
     props.onAddUser(enteredUsername, enteredAge);
-
-    // Reset input fields after successful submission
+    // Reset the age input field to empty string
     setEnteredAge("");
+    // Reset the username input field to empty string
     setEnteredUsername("");
   };
 
-  // Handlers for input changes and error handling
-  // These functions update the state variables based on user input
+  // Handler for username input changes
   const usernameChangeHandler = (event) => {
+    // Update the enteredUsername state with the new value
     setEnteredUsername(event.target.value);
   };
 
+  // Handler for age input changes
   const ageChangeHandler = (event) => {
+    // Update the enteredAge state with the new value
     setEnteredAge(event.target.value);
   };
 
-  // Function to handle error acknowledgment
+  // Handler to clear the error state when error modal is acknowledged
   const errorHandler = () => {
+    // Set error state to null to close the error modal
     setError(null);
   };
 
-  // The errorHandler function is called when the user acknowledges the error
-  // It sets the error state to null, effectively closing the error modal
+  // Render the component UI
   return (
     <div>
+      {/* If there is an error, display the ErrorModal component */}
       {error && (
         <ErrorModal
-          onConfirm={errorHandler}
-          title={error.title}
-          message={error.message}
+          onConfirm={errorHandler} // Handler for closing the modal
+          title={error.title}       // Error title
+          message={error.message}   // Error message
         />
       )}
-      {/* Conditional rendering of ErrorModal if an error exists */}
-      {/* The ErrorModal component is displayed when there is an error, allowing the user to acknowledge it */} 
+      {/* Render the Card component for form layout */}
       <Card className={classes.input}>
+        {/* Form for adding a user, calls addUserHandler on submit */}
         <form onSubmit={addUserHandler}>
+          {/* Username input field with label */}
           <div className="form-control">
             <label htmlFor="username">Username</label>
             <input
-              type="text"
-              id="username"
-              value={enteredUsername}
-              onChange={usernameChangeHandler}
+              type="text"                  // Input type is text
+              id="username"                // Input id for label association
+              value={enteredUsername}      // Controlled input value
+              onChange={usernameChangeHandler} // Handler for input changes
             />
           </div>
-          {/* Input field for username with label and change handler */}
-          {/* The input field is controlled by the enteredUsername state, and updates on change */} 
+          {/* Age input field with label */}
           <div className="form-control">
             <label htmlFor="age">Age (Years)</label>
             <input
-              type="number"
-              id="age"
-              value={enteredAge}
-              onChange={ageChangeHandler}
+              type="number"                // Input type is number
+              id="age"                     // Input id for label association
+              value={enteredAge}           // Controlled input value
+              onChange={ageChangeHandler}  // Handler for input changes
             />
           </div>
-          {/* Input field for age with label and change handler */}
-          {/* The input field is controlled by the enteredAge state, and updates on change */}  
+          {/* Button to submit the form */}
           <Button type="submit">Add User</Button>
         </form>
-        {/* Submit button to add user */}
-        {/* The button triggers the addUserHandler function when clicked, submitting the form */} 
       </Card>
     </div>
   );
 };
 
+// Export the AddUser component as the default export
 export default AddUser;
